@@ -1,5 +1,3 @@
-import os
-import subprocess
 import requests
 from bs4 import BeautifulSoup as bs
 #Getting the external IP <Start>
@@ -21,7 +19,7 @@ elif choice == "custom":
     body = input('Please enter the custom IP Address: ')
 #<End>
 
-#Getting IP Location from scraping ipinfo.io <Start>
+#Getting IP Location by scraping ipinfo.io <Start>
 
 link = "https://ipinfo.io/" + body + "/json"
 content = requests.get(link).content
@@ -30,5 +28,13 @@ soup = bs(content, 'html.parser')
 information = soup.find('pre')
 soup = str(soup)
 soup = soup.replace('{', '').replace('}' , '').replace('"readme": "https://ipinfo.io/missingauth"', '')
-print(soup)
+location = soup.split(',')
+location[4] = location[4].replace('"loc": "', '').replace('"', '').replace('\n', '').replace(' ', '') +',' + location[5] 
+test = soup.split('\n')
+test.pop(10)
+test.pop(9)
+soup = ''
+for x in test:
+    print(x)
+print('  "link to loc": "https://google.com/maps/search/' + location[4])
 #<End>
